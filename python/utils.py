@@ -1,12 +1,12 @@
-import serial
-import time
+import json
 import math
+import time
 
 import numpy as np
-import json
+import serial
+from loguru import logger
 from sqlgpt import SQLGPT
 from transformers import pipeline
-from loguru import logger
 
 transcriber = pipeline("automatic-speech-recognition", model="openai/whisper-base.en")
 
@@ -30,7 +30,7 @@ def transcribe(audio):
     s_to_txt = transcriber({"sampling_rate": sr, "raw": y})["text"]
     # logger.success("TRANSRIBED TEXT ", s_to_txt)
     start = time.time()
-    sql_stmt, sql_res = s.run_sql_stmt(s_to_txt)
+    sql_stmt, sql_res = s.run_sql_stmt(s_to_txt.lower())
     time_to_exec = time.time() - start
     # logger.success("TIME TO EXECUTE ", time_to_exec)
     pushups = cost(time_to_exec, len(sql_stmt), len(s_to_txt))
