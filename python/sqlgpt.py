@@ -2,9 +2,9 @@ import os
 
 import openai
 import psycopg2
-
 from const import PRE_PROMPT, USER_QUERY_SUFFIX
 from loguru import logger
+
 
 class SQLGPT:
     def __init__(self) -> None:
@@ -27,7 +27,7 @@ class SQLGPT:
 
         sql_response = "SELECT " + response["choices"][0]["text"]
 
-        return sql_response
+        return sql_response.lower()
 
     def run_sql_stmt(self, sqlgpt_result: str = None) -> str:
         stmt_to_run = self.form_sql_stmt(sqlgpt_result)
@@ -50,4 +50,4 @@ class SQLGPT:
             logger.error("Database not connected successfully")
 
     def process_sql_result(self, query_result: str) -> str:
-        return "".join(e for e in query_result if e.isalnum())  
+        return "".join(e for e in query_result if e.isalnum())
